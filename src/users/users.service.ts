@@ -29,6 +29,6 @@ export class UsersService {
   }
 
   remove(id: number) {
-    return this.userRepository.delete(id);
+    return this.userRepository.softDelete({ id });
   }
 }
