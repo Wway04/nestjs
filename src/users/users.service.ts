@@ -24,6 +24,13 @@ export class UsersService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  async findOneWithPosts(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) return null;
+    const posts = await user.posts;
+    return { ...user, posts };
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(id, updateUserDto);
   }

@@ -21,22 +21,18 @@ export class PostsService {
   }
 
   findAll() {
-    return this.postRepository.find({
-      relations: ['user'],
-    });
+    return this.postRepository.find();
   }
 
   findOne(id: number) {
     return this.postRepository.findOne({
-      where: { id },
-      relations: ['user'],
+      where: { id }
     });
   }
 
   findByUser(userId: number) {
     return this.postRepository.find({
       where: { user: { id: userId } }, 
-      relations: ['user'],
     });
   }
 

@@ -29,6 +29,6 @@ export class Post {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.posts, { nullable: false })
+  @ManyToOne(() => User, (user) => user.posts, { nullable: false, eager: true })
   user: User;
 }
