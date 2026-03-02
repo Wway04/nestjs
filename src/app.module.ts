@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import typeorm from './config/typeorm';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -26,6 +27,15 @@ import typeorm from './config/typeorm';
         return configService.get('typeorm');
       }
     }),
+    BullModule.forRootAsync({
+			inject: [ConfigService],
+			useFactory: async (configService: ConfigService) => ({
+				connection: {
+					host: configService.get('REDIS_HOST'),
+					port: configService.get('REDIS_PORT'),
+				},
+			}),
+		}),
     UsersModule,
     PostsModule,
   ],
