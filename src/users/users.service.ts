@@ -24,6 +24,10 @@ export class UsersService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  findByUserName(username: string) {
+    return this.userRepository.findOne({ where: { username } });
+  }
+
   async findOneWithPosts(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) return null;
