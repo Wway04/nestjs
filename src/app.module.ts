@@ -18,12 +18,6 @@ import { BullModule } from '@nestjs/bullmq';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        console.log(configService, 'configService');
-        console.log(configService.get('DB_HOST'), 'configService.get("DB_HOST")');
-        console.log(configService.get('DB_PORT'), 'configService.get("DB_PORT")');
-        console.log(configService.get('DB_USERNAME'), 'configService.get("DB_USERNAME")');
-        console.log(configService.get('DB_PASSWORD'), 'configService.get("DB_PASSWORD")');
-        console.log(configService.get('DB_NAME'), 'configService.get("DB_NAME")');
         return configService.get('typeorm');
       }
     }),

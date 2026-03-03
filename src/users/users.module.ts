@@ -4,16 +4,19 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User } from './entities/user.entity';
 import { BullModule } from '@nestjs/bullmq';
+import { UserProcessor } from './user.processor';
+import { USER_QUEUE } from './user.constants';
+
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     BullModule.registerQueue({
-      name: 'user-queue',
+      name: USER_QUEUE.name,
       prefix: 'user-queue'
     })
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, UserProcessor],
 })
 export class UsersModule { }

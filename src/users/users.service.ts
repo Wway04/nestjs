@@ -4,16 +4,34 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { USER_QUEUE } from './user.constants';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-  ) {}
+    @InjectQueue(USER_QUEUE.name) private userQueue: Queue,
+  ) { }
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+
+    await this.userQueue.add(USER_QUEUE.jobs.SEND_WELCOME_EMAIL, {
+      userId: savedUser.id,
+      email: savedUser.email,
+      name: savedUser.name
+    }, {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      }
+    });
+
+    return savedUser;
   }
 
   findAll() {
